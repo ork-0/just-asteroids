@@ -1,0 +1,18 @@
+[gd_scene load_steps=2 format=3 uid="uid://uddakusntat6"]
+
+[ext_resource type="Script" path="res://Scripts/Game/Objects/Projectiles/bullet.gd" id="1_t55gy"]
+
+[node name="Bullet" type="Area2D" node_paths=PackedStringArray("lifetime")]
+collision_layer = 4
+collision_mask = 160
+script = ExtResource("1_t55gy")
+lifetime = NodePath("Lifetime")
+
+[node name="Polygon2D" type="Polygon2D" parent="."]
+
+[node name="VisibleOnScreenNotifier2D" type="VisibleOnScreenNotifier2D" parent="."]
+scale = Vector2(0.8, 0.8)
+
+[node name="Lifetime" type="Timer" parent="."]
+wait_time = 4.0
+autostart = true

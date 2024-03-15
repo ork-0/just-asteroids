@@ -1,0 +1,45 @@
+[gd_scene load_steps=8 format=3 uid="uid://dfinbijpw8du2"]
+
+[ext_resource type="PackedScene" uid="uid://c545agryest3e" path="res://Scenes/Actors/Enemies/enemy.tscn" id="1_sl05p"]
+[ext_resource type="Texture2D" uid="uid://cgtexiv1my44b" path="res://Assets/viro_Z4FH.png" id="2_ubfri"]
+[ext_resource type="Script" path="res://Scripts/Components/health_component.gd" id="3_apx4p"]
+[ext_resource type="Script" path="res://Scripts/Components/pattern_component.gd" id="3_jsc6p"]
+[ext_resource type="PackedScene" uid="uid://b6selkxdudj27" path="res://Scenes/Objects/Projectiles/enemy_bullet.tscn" id="4_co74o"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_2q3cy"]
+radius = 20.3961
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_3c7l1"]
+radius = 18.4391
+
+[node name="viro_Z4FH" instance=ExtResource("1_sl05p")]
+
+[node name="Sprite2D" parent="." index="0"]
+scale = Vector2(0.3, 0.3)
+texture = ExtResource("2_ubfri")
+
+[node name="Fire_Rate" parent="." index="4"]
+wait_time = 0.3
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." index="5"]
+position = Vector2(2, 3)
+shape = SubResource("CircleShape2D_2q3cy")
+
+[node name="HealthComponent2" type="Node" parent="." index="6" node_paths=PackedStringArray("player")]
+script = ExtResource("3_apx4p")
+player = NodePath("../AnimationPlayer")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Hitbox" index="0"]
+position = Vector2(2, 3)
+shape = SubResource("CircleShape2D_3c7l1")
+debug_color = Color(0.858824, 0, 0.176471, 0.419608)
+
+[node name="PatternComponent" type="Node" parent="." index="9" node_paths=PackedStringArray("timer", "marker")]
+script = ExtResource("3_jsc6p")
+timer = NodePath("../Fire_Rate")
+marker = NodePath("../Marker")
+_primary = ExtResource("4_co74o")
+bullet_count = 1
+radius = 25
+rate = 100
+freq = 4

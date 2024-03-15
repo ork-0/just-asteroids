@@ -1,0 +1,51 @@
+[gd_scene load_steps=2 format=3 uid="uid://ck2jxvmi6874s"]
+
+[ext_resource type="Script" path="res://Scenes/Game/UI/win.gd" id="1_76nmt"]
+
+[node name="Win" type="CanvasLayer"]
+script = ExtResource("1_76nmt")
+
+[node name="Control" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ColorRect" type="ColorRect" parent="Control"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 1)
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Control"]
+layout_mode = 1
+anchors_preset = 14
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_top = -109.5
+offset_bottom = 109.5
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_constants/separation = 30
+
+[node name="Label" type="Label" parent="Control/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 25
+text = "If you're wondering why the game is so short, to put it in layman's terms I did a bit overscoping. It was a lot of fun to learn how to make and finish a game, and I might potentially go back and refactor everything once I get a better understanding of level design and overall programming skills. You can go back to begin the game again or quit at any time. Thanks."
+autowrap_mode = 2
+
+[node name="Restart" type="Button" parent="Control/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 4
+text = "Restart"
+
+[node name="Quit" type="Button" parent="Control/VBoxContainer"]
+layout_mode = 2
+text = "Quit"

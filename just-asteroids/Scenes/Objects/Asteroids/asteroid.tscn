@@ -1,0 +1,127 @@
+[gd_scene load_steps=12 format=3 uid="uid://dlfph1wayn3a3"]
+
+[ext_resource type="Script" path="res://Scripts/Game/Objects/asteroid.gd" id="1_dckmd"]
+[ext_resource type="Texture2D" uid="uid://djkexida33pj2" path="res://Assets/Asteroid.png" id="2_xmqxn"]
+[ext_resource type="Script" path="res://Scripts/Components/asteroid_hitbox_component.gd" id="3_8wwh0"]
+[ext_resource type="Script" path="res://Scripts/Components/asteroid_health_component.gd" id="3_pscuf"]
+[ext_resource type="PackedScene" uid="uid://3i6rdvcenpd8" path="res://Scenes/Objects/Asteroids/small_asteroid.tscn" id="5_ved6u"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_ldtao"]
+radius = 38.0526
+
+[sub_resource type="Curve" id="Curve_l1f3e"]
+_data = [Vector2(0.398876, 1), 0.0, -6.77092, 0, 0, Vector2(0.8, 0), 0.247601, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_techc"]
+radius = 34.0147
+
+[sub_resource type="Animation" id="Animation_5dq3a"]
+resource_name = "Explode"
+length = 0.6
+step = 0.01
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Explosion:emitting")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0.05),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [true]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Sprite2D:visible")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.04),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [true, false]
+}
+
+[sub_resource type="Animation" id="Animation_6sauy"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Explosion:emitting")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Sprite2D:visible")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [true]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_4qshn"]
+_data = {
+"Explode": SubResource("Animation_5dq3a"),
+"RESET": SubResource("Animation_6sauy")
+}
+
+[node name="Asteroid" type="Area2D" groups=["Asteroids"]]
+collision_layer = 64
+collision_mask = 13
+script = ExtResource("1_dckmd")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+position = Vector2(1, 0)
+scale = Vector2(0.62973, 0.62973)
+texture = ExtResource("2_xmqxn")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_ldtao")
+
+[node name="Explosion" type="CPUParticles2D" parent="."]
+emitting = false
+amount = 40
+lifetime = 1.5
+one_shot = true
+explosiveness = 1.0
+spread = 150.0
+gravity = Vector2(0, 0)
+initial_velocity_min = 100.0
+initial_velocity_max = 250.0
+scale_amount_min = 3.0
+scale_amount_max = 5.0
+scale_amount_curve = SubResource("Curve_l1f3e")
+
+[node name="AsteroidHealthComponent" type="Node" parent="."]
+script = ExtResource("3_pscuf")
+
+[node name="Hitbox" type="Area2D" parent="." node_paths=PackedStringArray("healthcomp", "player")]
+collision_layer = 128
+collision_mask = 12
+script = ExtResource("3_8wwh0")
+healthcomp = NodePath("../AsteroidHealthComponent")
+asteroid_container = ExtResource("5_ved6u")
+player = NodePath("../AnimationPlayer")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Hitbox"]
+shape = SubResource("CircleShape2D_techc")
+debug_color = Color(1, 0.00392157, 0.160784, 0.419608)
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+libraries = {
+"": SubResource("AnimationLibrary_4qshn")
+}
+autoplay = "RESET"

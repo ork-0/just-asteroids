@@ -1,0 +1,144 @@
+[gd_scene load_steps=16 format=3 uid="uid://c7bsjb1jmlk11"]
+
+[ext_resource type="Script" path="res://Scripts/Components/input_component.gd" id="1_fscim"]
+[ext_resource type="Script" path="res://Scripts/Game/Characters/Player/player.gd" id="1_vol8g"]
+[ext_resource type="PackedScene" uid="uid://dak3yyi0rd6hk" path="res://Scenes/Objects/Projectiles/bullet_generic.tscn" id="2_iw51i"]
+[ext_resource type="Shader" path="res://Scenes/Actors/Player/player.gdshader" id="3_31gdm"]
+[ext_resource type="Texture2D" uid="uid://0kqeuq73vc6x" path="res://Assets/SHIP.png" id="3_jimi6"]
+[ext_resource type="Script" path="res://Scripts/Components/player_health.gd" id="5_0sbbh"]
+[ext_resource type="PackedScene" uid="uid://drhelkrb8401a" path="res://Scenes/Game/hitbox.tscn" id="5_jtqbd"]
+[ext_resource type="Script" path="res://Scripts/Components/player_hitbox.gd" id="6_mlt84"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_4qpt5"]
+shader = ExtResource("3_31gdm")
+shader_parameter/offset = 20.0
+
+[sub_resource type="Curve" id="Curve_w4nw8"]
+_data = [Vector2(0.398876, 1), 0.0, -6.77092, 0, 0, Vector2(0.8, 0), 0.247601, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_1g4k8"]
+radius = 27.4591
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_88222"]
+radius = 12.1655
+
+[sub_resource type="Animation" id="Animation_5dq3a"]
+resource_name = "Explode"
+length = 1.5
+step = 0.01
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Explosion:emitting")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0.02),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [true]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Sprite2D:visible")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
+}
+
+[sub_resource type="Animation" id="Animation_6sauy"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Explosion:emitting")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Sprite2D:visible")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [true]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_4qshn"]
+_data = {
+"Explode": SubResource("Animation_5dq3a"),
+"RESET": SubResource("Animation_6sauy")
+}
+
+[node name="Player" type="CharacterBody2D" groups=["Player"]]
+scale = Vector2(0.5, 0.5)
+collision_mask = 2
+script = ExtResource("1_vol8g")
+_primary = ExtResource("2_iw51i")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+material = SubResource("ShaderMaterial_4qpt5")
+texture = ExtResource("3_jimi6")
+
+[node name="Nozzle" type="Marker2D" parent="."]
+position = Vector2(0, -71)
+
+[node name="Explosion" type="CPUParticles2D" parent="."]
+emitting = false
+amount = 40
+lifetime = 1.5
+one_shot = true
+explosiveness = 1.0
+spread = 150.0
+gravity = Vector2(0, 0)
+initial_velocity_min = 100.0
+initial_velocity_max = 250.0
+scale_amount_min = 3.0
+scale_amount_max = 5.0
+scale_amount_curve = SubResource("Curve_w4nw8")
+
+[node name="Player_Collision" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_1g4k8")
+
+[node name="PlayerHealthComponent" type="Node" parent="."]
+script = ExtResource("5_0sbbh")
+
+[node name="Hitbox" parent="." node_paths=PackedStringArray("healthcomp") instance=ExtResource("5_jtqbd")]
+collision_layer = 16
+collision_mask = 72
+script = ExtResource("6_mlt84")
+healthcomp = NodePath("../PlayerHealthComponent")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Hitbox"]
+shape = SubResource("CircleShape2D_88222")
+debug_color = Color(0.784314, 0, 0.223529, 0.419608)
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+libraries = {
+"": SubResource("AnimationLibrary_4qshn")
+}
+
+[node name="InputComponent" type="Node" parent="."]
+script = ExtResource("1_fscim")
+speed = 300.0
+
+[node name="Fire_Rate" type="Timer" parent="."]
+wait_time = 0.1
+autostart = true
+
+[connection signal="area_entered" from="Hitbox" to="." method="_on_area_entered"]

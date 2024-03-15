@@ -1,0 +1,28 @@
+[gd_scene load_steps=3 format=3 uid="uid://b6selkxdudj27"]
+
+[ext_resource type="Script" path="res://Scripts/Game/Objects/Projectiles/bullet.gd" id="1_8xdn0"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_vx5cd"]
+radius = 5.09902
+
+[node name="enemy_bullet" type="Area2D" node_paths=PackedStringArray("lifetime")]
+collision_layer = 8
+collision_mask = 16
+script = ExtResource("1_8xdn0")
+speed = 150
+lifetime = NodePath("LifeTime")
+
+[node name="Polygon2D" type="Polygon2D" parent="."]
+polygon = PackedVector2Array(0, 8, -8, -8, 0, -16, 8, -8)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, -6)
+shape = SubResource("CircleShape2D_vx5cd")
+
+[node name="VisibleOnScreenNotifier2D" type="VisibleOnScreenNotifier2D" parent="."]
+position = Vector2(2.38419e-07, -4)
+scale = Vector2(0.8, 1.2)
+
+[node name="LifeTime" type="Timer" parent="."]
+wait_time = 4.0
+autostart = true

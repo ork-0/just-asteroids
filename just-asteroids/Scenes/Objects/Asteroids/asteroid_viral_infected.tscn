@@ -1,0 +1,13 @@
+[gd_scene load_steps=5 format=3 uid="uid://5tdnborn7tn7"]
+
+[ext_resource type="PackedScene" uid="uid://dlfph1wayn3a3" path="res://Scenes/Objects/Asteroids/asteroid.tscn" id="1_v66c2"]
+[ext_resource type="Script" path="res://Scripts/Game/Objects/infected_asteroid.gd" id="2_lcuvt"]
+[ext_resource type="PackedScene" uid="uid://m36mme8nqhud" path="res://Scenes/Actors/Enemies/Types/patho_h_5.tscn" id="3_bbwwe"]
+[ext_resource type="PackedScene" uid="uid://dfinbijpw8du2" path="res://Scenes/Actors/Enemies/Types/viro_z_4fh.tscn" id="4_3h1j1"]
+
+[node name="asteroid_viral_infected" instance=ExtResource("1_v66c2")]
+
+[node name="Infected" type="Node" parent="." index="4" node_paths=PackedStringArray("player")]
+script = ExtResource("2_lcuvt")
+enemies = Array[PackedScene]([ExtResource("3_bbwwe"), ExtResource("4_3h1j1")])
+player = NodePath("../AnimationPlayer")

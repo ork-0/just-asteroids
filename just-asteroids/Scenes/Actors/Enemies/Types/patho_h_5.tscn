@@ -1,0 +1,28 @@
+[gd_scene load_steps=5 format=3 uid="uid://m36mme8nqhud"]
+
+[ext_resource type="PackedScene" uid="uid://c545agryest3e" path="res://Scenes/Actors/Enemies/enemy.tscn" id="1_bl2ss"]
+[ext_resource type="Texture2D" uid="uid://dt000bpwqysc8" path="res://Assets/patho_H5RG.png" id="2_jh15j"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_ljebo"]
+radius = 27.074
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_2ksnh"]
+radius = 17.0
+
+[node name="Patho_H5" instance=ExtResource("1_bl2ss")]
+
+[node name="Sprite2D" parent="." index="0"]
+texture = ExtResource("2_jh15j")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." index="1"]
+position = Vector2(-16, -11)
+shape = SubResource("CircleShape2D_ljebo")
+
+[node name="Fire_Rate" parent="." index="5"]
+wait_time = 0.7
+autostart = false
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Hitbox" index="0"]
+position = Vector2(-9, -12)
+shape = SubResource("CircleShape2D_2ksnh")
+debug_color = Color(0.964706, 0, 0.266667, 0.419608)
